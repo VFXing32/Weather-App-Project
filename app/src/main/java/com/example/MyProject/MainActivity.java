@@ -57,13 +57,14 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String temp) {
-//            if (temptext != null) {
-//                temptext.setText(temp);
-//            } else {
-//                temptext.setText("Failed to fetch text");
-//            }
+            if (temptext != null) {
+                temptext.setText(temp);
+            } else {
+                temptext.setText("Failed to fetch text");
+            }
 
-            Toast.makeText(getApplicationContext(), temp, Toast.LENGTH_SHORT).show();
+
+//            Toast.makeText(getApplicationContext(), temp, Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -94,29 +95,11 @@ public class MainActivity extends AppCompatActivity {
 
             return builder.toString();
         }
-//        private String parseJsonText(String json) throws JSONException {
-//            JSONObject jsonObject = new JSONObject(json);
-//            if (jsonObject.has("list")) {
-//                JSONObject listObject = jsonObject.getJSONObject("list");
-//
-//                // Check if the API response contains the "main" object
-//                if (listObject.has("main")) {
-//                    JSONObject mainObject = listObject.getJSONObject("main");
-//
-//                    // Check if the "temp" field is available
-//                    if (mainObject.has("temp")) {
-//                        double temperature = mainObject.getDouble("temp");
-//                        System.out.println(temperature);
-//
-//                        // Format the temperature as a string and return
-//                        return String.format("%.1f°C", temperature);
-//                    }
-//                }
-//            }
+
         private String parseJsonText(String json) throws JSONException {
             JSONObject jsonObject = new JSONObject(json);
             int numberOfIterations = 8;
-            double[] loopDataArray = new double[numberOfIterations];
+            String[] loopDataArray = new String[numberOfIterations];
 
             if (jsonObject.has("list")) {
                 JSONArray listArray = jsonObject.getJSONArray("list");
@@ -130,14 +113,15 @@ public class MainActivity extends AppCompatActivity {
 
                         // Check if the "temp" field is available
                         if (mainObject.has("temp")) {
-                            double temperature = mainObject.getDouble("temp");
-                            System.out.println(String.format("Temperature at index %d: %.1f°C", i, temperature));
+                            String temperature = mainObject.getString("temp");
+//                            System.out.println(String.format("Temperature at index %d: %.1f°C", i, temperature));
                             loopDataArray[i] = temperature;
 
                         }
                     }
                 }
-                return String.format("%.1f°C", loopDataArray[0]);
+                return loopDataArray[0];
+//                return String.format("%.1f°C", loopDataArray[0]);
             }
             // Return an error message if the expected data is not found
             return "Failed to parse weather data";
