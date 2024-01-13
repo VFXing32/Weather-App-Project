@@ -18,23 +18,26 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     EditText cityname;
     TextView temptext;
+    TextView temptext1;
+    TextView temptext2;
+    TextView temptext3;
     String apikey = "b58e782d8c5a53386137f197053c672a";
     String city = "Karachi";
     String link = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + apikey + "&units=metric";
-    String link2 = "https://api.openweathermap.org/data/2.5/forecast?q=karachi&appid=b58e782d8c5a53386137f197053c672a&units=metric&cnt=8";
+    String link2 = "https://api.openweathermap.org/data/2.5/forecast?q=karachi&appid=b58e782d8c5a53386137f197053c672a&units=metric&cnt=4";
 
     public void onclick(View v) {
-        Drawable back = (Drawable) getDrawable(R.drawable.back2);
-        RelativeLayout layout = (RelativeLayout) findViewById(R.id.relative);
+        Drawable back = getDrawable(R.drawable.back2);
+        RelativeLayout layout = findViewById(R.id.relative);
         layout.setBackground(back);
         Toast.makeText(this, "Refreshed", Toast.LENGTH_SHORT).show();
     }
@@ -45,10 +48,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         cityname = findViewById(R.id.city);
         temptext = findViewById(R.id.temp);
+        temptext1 = findViewById(R.id.temp1);
+        temptext2 = findViewById(R.id.temp2);
+        temptext3 = findViewById(R.id.temp3);
         new syncData().execute();
     }
 
-    public class syncData extends AsyncTask<String, String, String> {
+    public class syncData extends AsyncTask<String, String, List<String[]>> {
 
         @Override
         protected void onPreExecute() {
@@ -56,47 +62,52 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(String temp) {
-            if (temptext != null) {
-                temptext.setText(temp);
+        protected void onPostExecute(List<String[]> temperaturesList) {
+            if (temperaturesList != null && !temperaturesList.isEmpty()) {
+                // Do something with the list of temperatures
+                // For example, display them in a TextView
+                StringBuilder tempBuilder = new StringBuilder();
+                for (String[] loopDataArray : temperaturesList) {
+                    temptext.setText(loopDataArray[0]);
+                    temptext1.setText(loopDataArray[1]);
+                    temptext2.setText(loopDataArray[2]);
+                    temptext3.setText(loopDataArray[3]);
+                }
             } else {
-                temptext.setText("Failed to fetch text");
+                temptext.setText("Failed to fetch temperatures");
             }
-
-
-//            Toast.makeText(getApplicationContext(), temp, Toast.LENGTH_SHORT).show();
         }
 
         @Override
-        protected String doInBackground(String... strings) {
+        protected List<String[]> doInBackground(String... strings) {
+            List<String[]> temperaturesList = new ArrayList<>();
 
-            StringBuilder builder = new StringBuilder();
             try {
                 URL url = new URL(link2);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
                 connection.connect();
+
                 BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
                 while (true) {
                     String readLine = reader.readLine();
                     String data = readLine;
                     if (data == null) {
                         break;
                     }
-                    data = parseJsonText(data);
-                    builder.append(data);
-
-
+                    String[] loopDataArray = parseJsonText(data);
+                    temperaturesList.add(loopDataArray);
                 }
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            return builder.toString();
+            return temperaturesList;
         }
 
-        private String parseJsonText(String json) throws JSONException {
+        private String[] parseJsonText(String json) throws JSONException {
             JSONObject jsonObject = new JSONObject(json);
             int numberOfIterations = 8;
             String[] loopDataArray = new String[numberOfIterations];
@@ -107,24 +118,18 @@ public class MainActivity extends AppCompatActivity {
                 for (int i = 0; i < listArray.length(); i++) {
                     JSONObject listItem = listArray.getJSONObject(i);
 
-                    // Check if the "main" object is available in each list item
                     if (listItem.has("main")) {
                         JSONObject mainObject = listItem.getJSONObject("main");
 
-                        // Check if the "temp" field is available
                         if (mainObject.has("temp")) {
                             String temperature = mainObject.getString("temp");
-//                            System.out.println(String.format("Temperature at index %d: %.1f°C", i, temperature));
                             loopDataArray[i] = temperature;
-
                         }
                     }
                 }
-                return loopDataArray[0];
-//                return String.format("%.1f°C", loopDataArray[0]);
+                return loopDataArray;
             }
-            // Return an error message if the expected data is not found
-            return "Failed to parse weather data";
+            return new String[]{"Failed to parse weather data"};
         }
     }
 }
