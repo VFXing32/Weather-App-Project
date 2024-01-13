@@ -30,10 +30,7 @@ public class MainActivity extends AppCompatActivity {
     TextView temptext1;
     TextView temptext2;
     TextView temptext3;
-    String apikey = "b58e782d8c5a53386137f197053c672a";
-    String city = "Karachi";
-    String link = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + apikey + "&units=metric";
-    String link2 = "https://api.openweathermap.org/data/2.5/forecast?q=karachi&appid=b58e782d8c5a53386137f197053c672a&units=metric&cnt=4";
+
 
     public void onclick(View v) {
         Drawable back = getDrawable(R.drawable.back2);
@@ -51,85 +48,159 @@ public class MainActivity extends AppCompatActivity {
         temptext1 = findViewById(R.id.temp1);
         temptext2 = findViewById(R.id.temp2);
         temptext3 = findViewById(R.id.temp3);
-        new syncData().execute();
-    }
+        String city = cityname.getText().toString();
+        String apikey = "b58e782d8c5a53386137f197053c672a";
+        String link = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + apikey + "&units=metric";
+        String link2 = "https://api.openweathermap.org/data/2.5/forecast?q="+ city +"&appid=" + apikey + "&units=metric&cnt=4";
+        class syncData extends AsyncTask<String, String, List<String[]>> {
 
-    public class syncData extends AsyncTask<String, String, List<String[]>> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected void onPostExecute(List<String[]> temperaturesList) {
-            if (temperaturesList != null && !temperaturesList.isEmpty()) {
-                // Do something with the list of temperatures
-                // For example, display them in a TextView
-                StringBuilder tempBuilder = new StringBuilder();
-                for (String[] loopDataArray : temperaturesList) {
-                    temptext.setText(loopDataArray[0]);
-                    temptext1.setText(loopDataArray[1]);
-                    temptext2.setText(loopDataArray[2]);
-                    temptext3.setText(loopDataArray[3]);
-                }
-            } else {
-                temptext.setText("Failed to fetch temperatures");
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
             }
-        }
 
-        @Override
-        protected List<String[]> doInBackground(String... strings) {
-            List<String[]> temperaturesList = new ArrayList<>();
-
-            try {
-                URL url = new URL(link2);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("GET");
-                connection.connect();
-
-                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
-                while (true) {
-                    String readLine = reader.readLine();
-                    String data = readLine;
-                    if (data == null) {
-                        break;
+            @Override
+            protected void onPostExecute(List<String[]> temperaturesList) {
+                if (temperaturesList != null && !temperaturesList.isEmpty()) {
+                    // Do something with the list of temperatures
+                    // For example, display them in a TextView
+                    StringBuilder tempBuilder = new StringBuilder();
+                    for (String[] loopDataArray : temperaturesList) {
+                        temptext1.setText(loopDataArray[1]);
+                        temptext2.setText(loopDataArray[2]);
+                        temptext3.setText(loopDataArray[3]);
                     }
-                    String[] loopDataArray = parseJsonText(data);
-                    temperaturesList.add(loopDataArray);
+                } else {
+                    temptext1.setText("--");
+                    temptext2.setText("--");
+                    temptext3.setText("--");
                 }
-
-            } catch (Exception e) {
-                e.printStackTrace();
             }
 
-            return temperaturesList;
-        }
+            @Override
+            public List<String[]> doInBackground(String... strings) {
 
-        private String[] parseJsonText(String json) throws JSONException {
-            JSONObject jsonObject = new JSONObject(json);
-            int numberOfIterations = 8;
-            String[] loopDataArray = new String[numberOfIterations];
+                List<String[]> temperaturesList = new ArrayList<>();
 
-            if (jsonObject.has("list")) {
-                JSONArray listArray = jsonObject.getJSONArray("list");
+                try {
+                    URL url = new URL(link2);
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    connection.setRequestMethod("GET");
+                    connection.connect();
 
-                for (int i = 0; i < listArray.length(); i++) {
-                    JSONObject listItem = listArray.getJSONObject(i);
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
-                    if (listItem.has("main")) {
-                        JSONObject mainObject = listItem.getJSONObject("main");
+                    while (true) {
+                        String readLine = reader.readLine();
+                        String data = readLine;
+                        if (data == null) {
+                            break;
+                        }
+                        String[] loopDataArray = parseJsonText(data);
+                        temperaturesList.add(loopDataArray);
+                    }
 
-                        if (mainObject.has("temp")) {
-                            String temperature = mainObject.getString("temp");
-                            loopDataArray[i] = temperature;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                return temperaturesList;
+            }
+
+            private String[] parseJsonText(String json) throws JSONException {
+                JSONObject jsonObject = new JSONObject(json);
+                int numberOfIterations = 8;
+                String[] loopDataArray = new String[numberOfIterations];
+
+                if (jsonObject.has("list")) {
+                    JSONArray listArray = jsonObject.getJSONArray("list");
+
+                    for (int i = 0; i < listArray.length(); i++) {
+                        JSONObject listItem = listArray.getJSONObject(i);
+
+                        if (listItem.has("main")) {
+                            JSONObject mainObject = listItem.getJSONObject("main");
+
+                            if (mainObject.has("temp")) {
+                                String temperature = mainObject.getString("temp");
+                                loopDataArray[i] = temperature;
+                            }
                         }
                     }
+                    return loopDataArray;
                 }
-                return loopDataArray;
+                return new String[]{"Failed to parse weather data"};
             }
-            return new String[]{"Failed to parse weather data"};
+        }
+        class syncData1 extends AsyncTask<String, String, String> {
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+            }
+
+            @Override
+            protected void onPostExecute(String temp) {
+                if (temptext != null) {
+                    temptext.setText(temp);
+                } else {
+                    temptext.setText("Failed to fetch text");
+                }
+
+//            Toast.makeText(getApplicationContext(), temp, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            protected String doInBackground(String... strings) {
+
+                StringBuilder builder = new StringBuilder();
+                try {
+                    URL url = new URL(link);
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    connection.setRequestMethod("GET");
+                    connection.connect();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    while (true) {
+                        String readLine = reader.readLine();
+                        String data = readLine;
+                        if (data == null) {
+                            break;
+                        }
+                        data = parseJsonText(data);
+                        builder.append(data);
+
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                return builder.toString();
+            }
+            private String parseJsonText(String json) throws JSONException {
+                JSONObject jsonObject = new JSONObject(json);
+                // Check if the API response contains the "main" object
+                if (jsonObject.has("main")) {
+                    JSONObject mainObject = jsonObject.getJSONObject("main");
+
+                    // Check if the "temp" field is available
+                    if (mainObject.has("temp")) {
+                        double temperature = mainObject.getDouble("temp");
+                        System.out.println(temperature);
+
+                        // Format the temperature as a string and return
+                        return String.format("%.1f°C", temperature);
+                    }
+                }
+                // Return an error message if the expected data is not found
+                return "Failed to parse weather data";
+            }
+        }
+        if(!cityname.getText().toString().isEmpty()){
+            new syncData().execute();
+            new syncData1().execute();
         }
     }
+
 }
+
