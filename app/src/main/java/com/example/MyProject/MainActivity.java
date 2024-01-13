@@ -24,8 +24,11 @@ public class MainActivity extends AppCompatActivity {
 
     EditText cityname;
     TextView temptext;
+    String apikey = "b58e782d8c5a53386137f197053c672a";
+    String city = "Karachi";
+    String link = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + apikey + "&units=metric";
 
-    public void onclick(View v){
+    public void onclick(View v) {
         Drawable back = (Drawable) getDrawable(R.drawable.back2);
         RelativeLayout layout = (RelativeLayout) findViewById(R.id.relative);
         layout.setBackground(back);
@@ -38,94 +41,76 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         cityname = findViewById(R.id.city);
         temptext = findViewById(R.id.temp);
-        FetchTextTask fetchTextTask = new FetchTextTask();
-        fetchTextTask.execute();
+        //FetchTextTask fetchTextTask = new FetchTextTask();
+        //fetchTextTask.execute();
+        new syncData().execute();
     }
 
-    public void get(View v){
-        String apikey = "b58e782d8c5a53386137f197053c672a";
-        String city = "Karachi";
-        // Use cityname.getText().toString() if you want to get the city dynamically
-        String url = "https://api.openweathermap.org/data/2.5/weather?q="+city+"&appid="+apikey+"&units=metric";
-    }
+    public class syncData extends AsyncTask<String, String, String> {
 
-    private class FetchTextTask extends AsyncTask<Void, Void,String> {
-        protected String doInBackground(Void... voids){
-            String apikey = "b58e782d8c5a53386137f197053c672a";
-            String city = "karachi";
-            String text = null;
-            HttpURLConnection urlConnection = null;
-            BufferedReader reader = null;
-
-            try{
-                URL url = new URL("https://api.openweathermap.org/data/2.5/weather?q="+city+"&appid="+apikey+"&units=metric");
-                urlConnection = (HttpURLConnection) url.openConnection();
-                InputStream inputStream = urlConnection.getInputStream();
-
-                StringBuilder buffer = new StringBuilder();
-                if (inputStream == null){
-                    return null;
-                }
-
-                reader = new BufferedReader(new InputStreamReader(inputStream));
-                String line;
-                while((line = reader.readLine()) != null) {
-                    buffer.append(line).append("\n");
-                }
-
-                if (buffer.length() == 0){
-                    return null;
-                }
-                text = parseJsonText(buffer.toString());
-
-            }
-            catch (IOException | JSONException e){
-                e.printStackTrace();
-            }
-            finally {
-                if(urlConnection != null){
-                    urlConnection.disconnect();
-                }
-                if(reader!= null){
-                    try{
-                        reader.close();
-                    }
-                    catch (IOException e){
-                        e.printStackTrace();
-                    }
-                }
-            }
-            return text;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
         }
 
         @Override
-        protected void onPostExecute(String temp){
-            if (temptext != null){
+        protected void onPostExecute(String temp) {
+            if (temptext != null) {
                 temptext.setText(temp);
-            }
-            else{
+            } else {
                 temptext.setText("Failed to fetch text");
             }
+
+            //Toast.makeText(getApplicationContext(), ""+temp, Toast.LENGTH_SHORT).show();
         }
-    }
 
-    private String parseJsonText(String json) throws JSONException {
-        JSONObject jsonObject = new JSONObject(json);
+        @Override
+        protected String doInBackground(String... strings) {
 
-        // Check if the API response contains the "main" object
-        if (jsonObject.has("main")) {
-            JSONObject mainObject = jsonObject.getJSONObject("main");
+            StringBuilder builder = new StringBuilder();
+            try {
+                URL url = new URL(link);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                connection.connect();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                while (true) {
+                    String readLine = reader.readLine();
+                    String data = readLine;
+                    if (data == null) {
+                        break;
+                    }
+                    data = parseJsonText(data.toString());
+                    builder.append(data);
 
-            // Check if the "temp" field is available
-            if (mainObject.has("temp")) {
-                double temperature = mainObject.getDouble("temp");
 
-                // Format the temperature as a string and return
-                return String.format("%.1f°C", temperature);
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+
+            return builder.toString();
         }
 
-        // Return an error message if the expected data is not found
-        return "Failed to parse weather data";
+        private String parseJsonText(String json) throws JSONException {
+            JSONObject jsonObject = new JSONObject(json);
+
+            // Check if the API response contains the "main" object
+            if (jsonObject.has("main")) {
+                JSONObject mainObject = jsonObject.getJSONObject("main");
+
+                // Check if the "temp" field is available
+                if (mainObject.has("temp")) {
+                    double temperature = mainObject.getDouble("temp");
+
+                    // Format the temperature as a string and return
+                    return String.format("%.1f°C", temperature);
+                }
+            }
+
+            // Return an error message if the expected data is not found
+            return "Failed to parse weather data";
+        }
     }
 }
