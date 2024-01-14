@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     TextView temptext1;
     TextView temptext2;
     TextView temptext3;
+    Button reload;
 
 
     public void onclick(View v) {
@@ -48,12 +50,14 @@ public class MainActivity extends AppCompatActivity {
         temptext1 = findViewById(R.id.temp1);
         temptext2 = findViewById(R.id.temp2);
         temptext3 = findViewById(R.id.temp3);
+        reload = findViewById(R.id.dataload);
         String city = cityname.getText().toString();
         String apikey = "b58e782d8c5a53386137f197053c672a";
         String link = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + apikey + "&units=metric";
         String link2 = "https://api.openweathermap.org/data/2.5/forecast?q="+ city +"&appid=" + apikey + "&units=metric&cnt=4";
         class syncData extends AsyncTask<String, String, List<String[]>> {
-
+            String city = cityname.getText().toString();
+            String link2 = "https://api.openweathermap.org/data/2.5/forecast?q="+ city +"&appid=" + apikey + "&units=metric&cnt=4";
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
@@ -66,13 +70,14 @@ public class MainActivity extends AppCompatActivity {
                     // For example, display them in a TextView
                     StringBuilder tempBuilder = new StringBuilder();
                     for (String[] loopDataArray : temperaturesList) {
-                        temptext1.setText(loopDataArray[1]);
-                        temptext2.setText(loopDataArray[2]);
-                        temptext3.setText(loopDataArray[3]);
+                        temptext1.setText(String.format("%.1f°C", Double.parseDouble(loopDataArray[1])));
+                        temptext2.setText(String.format("%.1f°C", Double.parseDouble(loopDataArray[2])));
+                        temptext3.setText(String.format("%.1f°C", Double.parseDouble(loopDataArray[3])));
+
                     }
                 } else {
-                    temptext1.setText("--");
-                    temptext2.setText("--");
+                    temptext1.setText("   --     ");
+                    temptext2.setText(" --      ");
                     temptext3.setText("--");
                 }
             }
@@ -133,6 +138,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         class syncData1 extends AsyncTask<String, String, String> {
+            String city = cityname.getText().toString();
+            String link = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + apikey + "&units=metric";
 
             @Override
             protected void onPreExecute() {
@@ -196,11 +203,22 @@ public class MainActivity extends AppCompatActivity {
                 return "Failed to parse weather data";
             }
         }
-        if(!cityname.getText().toString().isEmpty()){
-            new syncData().execute();
-            new syncData1().execute();
+        reload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!cityname.getText().toString().isEmpty()){
+                    new syncData().execute();
+                    new syncData1().execute();
+                }
+                else{
+                    temptext.setText("No city");
+                    temptext1.setText("   --     ");
+                    temptext2.setText(" --      ");
+                    temptext3.setText("--");
+                }
+            }
         }
+        );
     }
-
 }
 

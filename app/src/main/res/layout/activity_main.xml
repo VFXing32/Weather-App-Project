@@ -33,6 +33,20 @@
         android:textSize="30sp"
         android:textStyle="bold" />
 
+    <Button
+        android:id="@+id/dataload"
+        android:layout_width="62dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/descripton"
+        android:layout_alignParentRight="true"
+        android:layout_centerInParent="true"
+        android:layout_marginRight="33dp"
+        android:layout_marginBottom="21dp"
+        android:backgroundTint="@color/cardview_shadow_end_color"
+        android:drawableEnd="@drawable/baseline_cached_24"
+        android:textColor="@color/black"
+        />
+
     <TextView
         android:id="@+id/descripton"
         android:layout_width="wrap_content"
@@ -161,8 +175,8 @@
                 android:id="@+id/temp1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="35sp"
-                android:text="--"
+                android:layout_marginStart="33sp"
+                android:text="   --     "
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:fontFamily="@font/font1"
@@ -173,8 +187,8 @@
                 android:id="@+id/temp2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="53sp"
-                android:text="--"
+                android:layout_marginStart="55sp"
+                android:text="--      "
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:fontFamily="@font/font1"
