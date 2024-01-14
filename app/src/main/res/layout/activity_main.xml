@@ -26,26 +26,28 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/descripton"
         android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
         android:layout_marginBottom="15sp"
         android:fontFamily="@font/font1"
         android:hint="Enter City name"
+        android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="30sp"
         android:textStyle="bold" />
 
     <Button
         android:id="@+id/dataload"
-        android:layout_width="62dp"
-        android:layout_height="wrap_content"
+        android:layout_width="46dp"
+        android:layout_height="45dp"
         android:layout_above="@id/descripton"
         android:layout_alignParentRight="true"
+
         android:layout_centerInParent="true"
-        android:layout_marginRight="33dp"
+        android:layout_marginRight="38dp"
         android:layout_marginBottom="21dp"
         android:backgroundTint="@color/cardview_shadow_end_color"
-        android:drawableEnd="@drawable/baseline_cached_24"
-        android:textColor="@color/black"
-        />
+        android:drawableBottom="@drawable/baseline_cached_24"
+        android:textColor="@color/black" />
 
     <TextView
         android:id="@+id/descripton"
@@ -81,63 +83,63 @@
         android:textStyle="bold" />
 
     <LinearLayout
-        android:layout_width="300sp"
-        android:layout_height="500sp"
+        android:layout_width="309dp"
+        android:layout_height="225dp"
         android:layout_below="@+id/temp"
         android:layout_centerInParent="true"
-        android:layout_marginTop="50sp"
+        android:layout_marginTop="63dp"
         android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Today's Forecast"
-            android:textSize="18sp"
             android:fontFamily="@font/font1"
+            android:text="Today's Forecast"
             android:textColor="@color/white"
-            />
+            android:textSize="18sp" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+
+            >
 
             <TextView
 
-                android:layout_width="wrap_content"
+                android:layout_width="76dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="22sp"
+                android:layout_marginStart="20sp"
                 android:layout_marginTop="20sp"
+                android:fontFamily="@font/font1"
                 android:text="9:00AM"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:fontFamily="@font/font1"
                 android:textColor="@color/white"
-                />
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="28sp"
+                android:layout_marginStart="19sp"
                 android:layout_marginTop="20sp"
+                android:fontFamily="@font/font1"
                 android:text="12:00PM"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:fontFamily="@font/font1"
+                android:textAlignment="center"
                 android:textColor="@color/white"
-                />
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="75dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="26sp"
+                android:layout_marginStart="23sp"
                 android:layout_marginTop="20sp"
-                android:text="3:00PM"
-                android:textSize="20sp"
-                android:textStyle="bold"
                 android:fontFamily="@font/font1"
+                android:text="3:00PM"
+                android:textAlignment="center"
                 android:textColor="@color/white"
-                />
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
         </LinearLayout>
 
@@ -173,39 +175,39 @@
 
             <TextView
                 android:id="@+id/temp1"
-                android:layout_width="wrap_content"
+                android:layout_width="71dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="33sp"
-                android:text="   --     "
-                android:textSize="20sp"
-                android:textStyle="bold"
+                android:layout_marginStart="20sp"
                 android:fontFamily="@font/font1"
+                android:text="--"
+                android:textAlignment="center"
                 android:textColor="@color/white"
-                />
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/temp2"
-                android:layout_width="wrap_content"
+                android:layout_width="72dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="55sp"
-                android:text="--      "
-                android:textSize="20sp"
-                android:textStyle="bold"
+                android:layout_marginStart="25sp"
                 android:fontFamily="@font/font1"
+                android:text="--"
+                android:textAlignment="center"
                 android:textColor="@color/white"
-                />
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/temp3"
-                android:layout_width="wrap_content"
+                android:layout_width="71dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="50sp"
-                android:text="--"
-                android:textSize="20sp"
-                android:textStyle="bold"
+                android:layout_marginStart="25sp"
                 android:fontFamily="@font/font1"
+                android:text="--"
+                android:textAlignment="center"
                 android:textColor="@color/white"
-                />
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
         </LinearLayout>
 

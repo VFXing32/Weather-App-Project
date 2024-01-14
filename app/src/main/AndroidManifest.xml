@@ -9,7 +9,7 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/weather_app"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/weather_icon_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.A2Q1T4"
         tools:targetApi="31">

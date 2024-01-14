@@ -76,8 +76,8 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 } else {
-                    temptext1.setText("   --     ");
-                    temptext2.setText(" --      ");
+                    temptext1.setText("--");
+                    temptext2.setText("--");
                     temptext3.setText("--");
                 }
             }
@@ -212,8 +212,8 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else{
                     temptext.setText("No city");
-                    temptext1.setText("   --     ");
-                    temptext2.setText(" --      ");
+                    temptext1.setText("--");
+                    temptext2.setText("--");
                     temptext3.setText("--");
                 }
             }
