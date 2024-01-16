@@ -77,10 +77,10 @@ public class MainActivity1 extends AppCompatActivity implements WeatherAsyncTask
             layout.setBackground(morning);
         } else if (timecheck() >= 13 &&timecheck() < 19) {
             // Evening
-            layout.setBackground(evening);
+            layout.setBackground(night);
         } else if (timecheck() >= 19 || timecheck() < 7) {
             // Night
-            layout.setBackground(night);
+            layout.setBackground(evening);
         }
         reload.setOnClickListener(new View.OnClickListener() {
             @Override
