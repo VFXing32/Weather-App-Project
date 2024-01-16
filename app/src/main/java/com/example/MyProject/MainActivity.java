@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void onclick(View v) {
-        Drawable back = getDrawable(R.drawable.back2);
+        Drawable back = getDrawable(R.drawable.night);
         RelativeLayout layout = findViewById(R.id.relative);
         layout.setBackground(back);
         Toast.makeText(this, "Refreshed", Toast.LENGTH_SHORT).show();

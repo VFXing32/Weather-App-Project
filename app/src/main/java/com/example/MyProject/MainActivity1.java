@@ -24,6 +24,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -51,11 +52,10 @@ public class MainActivity1 extends AppCompatActivity implements WeatherAsyncTask
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        long currentTimeMillis = System.currentTimeMillis();
-        Date currentDate = new Date(currentTimeMillis);
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String formattedDate = sdf.format(currentDate);
+        Drawable morning = getDrawable(R.drawable.morning);
+        Drawable evening = getDrawable(R.drawable.evening);
+        Drawable night = getDrawable(R.drawable.night);
+        RelativeLayout layout = findViewById(R.id.relative);
         cityname = findViewById(R.id.city);
         temptext = findViewById(R.id.temp);
         temptext1 = findViewById(R.id.temp1);
@@ -72,12 +72,21 @@ public class MainActivity1 extends AppCompatActivity implements WeatherAsyncTask
         time3 = findViewById(R.id.time3);
         String city = cityname.getText().toString();
         String apikey = "b58e782d8c5a53386137f197053c672a";
+        if (timecheck() >= 7 && timecheck() < 13) {
+            // Morning
+            layout.setBackground(morning);
+        } else if (timecheck() >= 13 &&timecheck() < 19) {
+            // Evening
+            layout.setBackground(evening);
+        } else if (timecheck() >= 19 || timecheck() < 7) {
+            // Night
+            layout.setBackground(night);
+        }
         reload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(!cityname.getText().toString().isEmpty()){
-                    System.out.println(formattedDate);
-                    dateformat(formattedDate);
+
                     String city = cityname.getText().toString();
                     String apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + apikey + "&units=metric";
                     String apiUrl2 = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=" + apikey + "&units=metric&cnt=4";
@@ -165,6 +174,12 @@ public class MainActivity1 extends AppCompatActivity implements WeatherAsyncTask
             e.printStackTrace();
         }
         return time12HourFormat;
+    }
+    public int timecheck(){
+        Calendar calendar = Calendar.getInstance();
+        int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
+        System.out.println(hourOfDay);
+    return hourOfDay;
     }
 
 }
