@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     TextView temptext1;
     TextView temptext2;
     TextView temptext3;
+    TextView desc;
     Button reload;
 
 
@@ -50,12 +51,13 @@ public class MainActivity extends AppCompatActivity {
         temptext1 = findViewById(R.id.temp1);
         temptext2 = findViewById(R.id.temp2);
         temptext3 = findViewById(R.id.temp3);
+        desc = findViewById(R.id.descripton);
         reload = findViewById(R.id.dataload);
         String city = cityname.getText().toString();
         String apikey = "b58e782d8c5a53386137f197053c672a";
         String link = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + apikey + "&units=metric";
         String link2 = "https://api.openweathermap.org/data/2.5/forecast?q="+ city +"&appid=" + apikey + "&units=metric&cnt=4";
-        class syncData extends AsyncTask<String, String, List<String[]>> {
+        class syncData1 extends AsyncTask<String, String, List<String[]>> {
             String city = cityname.getText().toString();
             String link2 = "https://api.openweathermap.org/data/2.5/forecast?q="+ city +"&appid=" + apikey + "&units=metric&cnt=4";
             @Override
@@ -65,10 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(List<String[]> temperaturesList) {
-                if (temperaturesList != null && !temperaturesList.isEmpty()) {
-                    // Do something with the list of temperatures
-                    // For example, display them in a TextView
-                    StringBuilder tempBuilder = new StringBuilder();
+                if (!temperaturesList.isEmpty()) {
                     for (String[] loopDataArray : temperaturesList) {
                         temptext1.setText(String.format("%.1f°C", Double.parseDouble(loopDataArray[1])));
                         temptext2.setText(String.format("%.1f°C", Double.parseDouble(loopDataArray[2])));
@@ -137,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
                 return new String[]{"Failed to parse weather data"};
             }
         }
-        class syncData1 extends AsyncTask<String, String, String> {
+        class syncData extends AsyncTask<String, String, String> {
             String city = cityname.getText().toString();
             String link = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + apikey + "&units=metric";
 
@@ -148,12 +147,12 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(String temp) {
-                if (temptext != null) {
+                if (!temp.isEmpty()) {
                     temptext.setText(temp);
-                } else {
-                    temptext.setText("Failed to fetch text");
                 }
-
+                else {
+                    temptext.setText("Wrong City");
+                }
 //            Toast.makeText(getApplicationContext(), temp, Toast.LENGTH_SHORT).show();
             }
 
@@ -219,6 +218,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         );
+
     }
 }
 
