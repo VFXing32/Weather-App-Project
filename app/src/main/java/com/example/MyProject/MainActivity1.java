@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,6 +16,8 @@ import com.example.myapplication.R;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -22,7 +25,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-public class MainActivity1 extends AppCompatActivity implements WeatherAsyncTask.WeatherCallback,WeatherAsyncTask2.WeatherCallback{
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public class MainActivity1 extends AppCompatActivity implements WeatherAsyncTask.WeatherCallback,WeatherAsyncTask2.WeatherCallback {
     EditText cityname;
     TextView temptext;
     TextView temptext1;
@@ -30,6 +38,11 @@ public class MainActivity1 extends AppCompatActivity implements WeatherAsyncTask
     TextView temptext3;
     TextView desc;
     Button reload;
+    ImageView weather;
+    TextView time1;
+    TextView time2;
+    TextView time3;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,28 +55,97 @@ public class MainActivity1 extends AppCompatActivity implements WeatherAsyncTask
         temptext3 = findViewById(R.id.temp3);
         desc = findViewById(R.id.descripton);
         reload = findViewById(R.id.dataload);
+        weather = findViewById(R.id.weather);
+        time1 = findViewById(R.id.time1);
+        time2 = findViewById(R.id.time2);
+        time3 = findViewById(R.id.time3);
         String city = cityname.getText().toString();
         String apikey = "b58e782d8c5a53386137f197053c672a";
-        String link = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + apikey + "&units=metric";
-        String link2 = "https://api.openweathermap.org/data/2.5/forecast?q="+ city +"&appid=" + apikey + "&units=metric&cnt=4";
-        String apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=karachi&appid=b58e782d8c5a53386137f197053c672a&units=metric"; // Replace with your API URL
-        String apiUrl2 = "https://api.openweathermap.org/data/2.5/forecast?q=Karachi&appid=b58e782d8c5a53386137f197053c672a&units=metric&cnt=3";
-        WeatherAsyncTask weatherapi = new WeatherAsyncTask(this);
-        WeatherAsyncTask2 weatherapi2 = new WeatherAsyncTask2(this);
-        weatherapi.execute(apiUrl);
-        weatherapi2.execute(apiUrl2);
+        reload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!cityname.getText().toString().isEmpty()){
+                    String city = cityname.getText().toString();
+                    String apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + apikey + "&units=metric";
+                    String apiUrl2 = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=" + apikey + "&units=metric&cnt=4";
+                    WeatherAsyncTask weatherapi = new WeatherAsyncTask(MainActivity1.this);
+                    WeatherAsyncTask2 weatherapi2 = new WeatherAsyncTask2(MainActivity1.this);
+                    weatherapi.execute(apiUrl);
+                    weatherapi2.execute(apiUrl2);
+                }
+                else{
+                    temptext.setText("No city");
+                    desc.setText("NaN");
+                    temptext1.setText("--");
+                    temptext2.setText("--");
+                    temptext3.setText("--");
+                    weather.setImageResource(R.drawable.cloudysunnybg);
+                }
+            }
+        }
+        );
     }
 
     @Override
-    public void onWeatherDataFetched(double temperature, String description) {
-        // Handle the fetched temperature and description here
-        Log.d("Weather", "Temperature: " + temperature + "°C, Description: " + description);
-        System.out.println(temperature + " " + description);
+    public void onWeatherDataFetched(double temp, String description) {
+        if (!Double.isNaN(temp)) {
+            weather.setImageResource(R.drawable.cloudysunny);
+            temptext.setText(String.format("%.1f°C", temp));
+            String capitalizedString = description.substring(0, 1).toUpperCase() + description.substring(1);
+            desc.setText(capitalizedString);
+        }
+        else {
+            temptext.setText("Wrong City");
+            desc.setText("NaN");
+        }
     }
-    @Override
-    public void onWeatherDataFetched2(double temp1, double temp2, double temp3) {
-        System.out.println(temp1+"\n"+temp2+"\n"+temp3+"\n");
 
+    @Override
+    public void onWeathernoFetched(String text) {
+
+        temptext.setText(text);
+        desc.setText("NaN");
+        temptext1.setText("--");
+        time1.setText("NaN");
+        temptext2.setText("--");
+        time2.setText("NaN");
+        temptext3.setText("--");
+        time3.setText("NaN");
+        weather.setImageResource(R.drawable.cloudysunnybg);
+    }
+
+    @Override
+    public void onWeatherDataFetched2(double temp1, double temp2, double temp3, String dt1, String dt2, String dt3) {
+
+        if (!Double.isNaN(temp1)){
+            temptext1.setText(String.format("%.1f°C", temp1));
+            time1.setText(dateformat(dt1));
+            temptext2.setText(String.format("%.1f°C", temp2));
+            time2.setText(dateformat(dt2));
+            temptext3.setText(String.format("%.1f°C", temp3));
+            time3.setText(dateformat(dt3));
+
+        } else {
+            temptext1.setText("--");
+            time1.setText("NaN");
+            temptext2.setText("--");
+            time2.setText("NaN");
+            temptext3.setText("--");
+            time3.setText("NaN");
+        }
+    }
+    public String dateformat(String date) {
+        DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        DateFormat outputFormat = new SimpleDateFormat("hh:mma");
+        String time12HourFormat = null;
+        try {
+            Date date1 = inputFormat.parse(date);
+            time12HourFormat = outputFormat.format(date1);
+            System.out.println(time12HourFormat);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return time12HourFormat;
     }
 
 }

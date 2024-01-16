@@ -65,11 +65,13 @@ public class WeatherAsyncTask extends AsyncTask<String, Void, String> {
 
         } catch (JSONException e) {
             e.printStackTrace();
+            callback.onWeathernoFetched("Wrong City");
         }
     }
 
     public interface WeatherCallback {
         void onWeatherDataFetched(double temperature, String description);
+        void onWeathernoFetched(String text);
     }
 }
 

@@ -55,21 +55,25 @@ public class WeatherAsyncTask2 extends AsyncTask<String, Void, String> {
                 JSONObject jsonObject = new JSONObject(jsonResponse);
                 JSONArray listArray = jsonObject.getJSONArray("list");
 
-                double[] tempValues = new double[3];
+                double[] tempValues = new double[8];
+                String[] date1 = new String[8];
                 for (int i = 0; i < listArray.length(); i++) {
                     JSONObject listItem = listArray.getJSONObject(i);
                     JSONObject mainObject = listItem.getJSONObject("main");
                     double temp = mainObject.getDouble("temp");
+                    String date = listItem.getString("dt_txt");
+                    date1[i] = date;
                     tempValues[i] = temp;
                 }
-                callback.onWeatherDataFetched2(tempValues[0], tempValues[1], tempValues[2]);
+                callback.onWeatherDataFetched2(tempValues[0], tempValues[1], tempValues[2],date1[0],date1[1],date1[2]);
             } catch (JSONException e) {
                 e.printStackTrace();
+
             }
         }
     }
 
     public interface WeatherCallback {
-        void onWeatherDataFetched2(double temp1, double temp2, double temp3);
+        void onWeatherDataFetched2(double temp1, double temp2, double temp3 ,String dt1,String dt2 ,String dt3);
     }
 }
