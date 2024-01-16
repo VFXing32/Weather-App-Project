@@ -39,6 +39,9 @@ public class MainActivity1 extends AppCompatActivity implements WeatherAsyncTask
     TextView desc;
     Button reload;
     ImageView weather;
+    ImageView weather1;
+    ImageView weather2;
+    ImageView weather3;
     TextView time1;
     TextView time2;
     TextView time3;
@@ -48,6 +51,11 @@ public class MainActivity1 extends AppCompatActivity implements WeatherAsyncTask
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        long currentTimeMillis = System.currentTimeMillis();
+        Date currentDate = new Date(currentTimeMillis);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String formattedDate = sdf.format(currentDate);
         cityname = findViewById(R.id.city);
         temptext = findViewById(R.id.temp);
         temptext1 = findViewById(R.id.temp1);
@@ -56,6 +64,9 @@ public class MainActivity1 extends AppCompatActivity implements WeatherAsyncTask
         desc = findViewById(R.id.descripton);
         reload = findViewById(R.id.dataload);
         weather = findViewById(R.id.weather);
+        weather1 = findViewById(R.id.weather1);
+        weather2 = findViewById(R.id.weather2);
+        weather3 = findViewById(R.id.weather3);
         time1 = findViewById(R.id.time1);
         time2 = findViewById(R.id.time2);
         time3 = findViewById(R.id.time3);
@@ -65,6 +76,8 @@ public class MainActivity1 extends AppCompatActivity implements WeatherAsyncTask
             @Override
             public void onClick(View v) {
                 if(!cityname.getText().toString().isEmpty()){
+                    System.out.println(formattedDate);
+                    dateformat(formattedDate);
                     String city = cityname.getText().toString();
                     String apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + apikey + "&units=metric";
                     String apiUrl2 = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=" + apikey + "&units=metric&cnt=4";
@@ -103,15 +116,18 @@ public class MainActivity1 extends AppCompatActivity implements WeatherAsyncTask
     @Override
     public void onWeathernoFetched(String text) {
 
-        temptext.setText(text);
         desc.setText("NaN");
+        temptext.setText(text);
+        weather.setImageResource(R.drawable.cloudysunnybg);
         temptext1.setText("--");
         time1.setText("NaN");
+        weather1.setImageResource(R.drawable.cloudybg);
         temptext2.setText("--");
         time2.setText("NaN");
+        weather2.setImageResource(R.drawable.fullcloudbg);
         temptext3.setText("--");
         time3.setText("NaN");
-        weather.setImageResource(R.drawable.cloudysunnybg);
+        weather3.setImageResource(R.drawable.rainingbg);
     }
 
     @Override
@@ -120,10 +136,13 @@ public class MainActivity1 extends AppCompatActivity implements WeatherAsyncTask
         if (!Double.isNaN(temp1)){
             temptext1.setText(String.format("%.1f°C", temp1));
             time1.setText(dateformat(dt1));
+            weather1.setImageResource(R.drawable.cloudy);
             temptext2.setText(String.format("%.1f°C", temp2));
             time2.setText(dateformat(dt2));
+            weather2.setImageResource(R.drawable.fullcloud);
             temptext3.setText(String.format("%.1f°C", temp3));
             time3.setText(dateformat(dt3));
+            weather3.setImageResource(R.drawable.raining);
 
         } else {
             temptext1.setText("--");
