@@ -63,7 +63,7 @@ public class MainActivity1 extends AppCompatActivity {
             layout.setBackground(morning);
         } else if (timecheck() >= 13 && timecheck() < 19) {
             // Evening
-            layout.setBackground(morning);
+            layout.setBackground(evening);
         } else if (timecheck() >= 19 || timecheck() < 7) {
             // Night
             layout.setBackground(night);
