@@ -63,7 +63,7 @@ public class MainActivity1 extends AppCompatActivity {
             layout.setBackground(morning);
         } else if (timecheck() >= 13 && timecheck() < 19) {
             // Evening
-            layout.setBackground(evening);
+            layout.setBackground(morning);
         } else if (timecheck() >= 19 || timecheck() < 7) {
             // Night
             layout.setBackground(night);
@@ -125,10 +125,10 @@ public class MainActivity1 extends AppCompatActivity {
             weather1.setImageResource(R.drawable.cloudy);
             temptext2.setText(String.format("%.1f°C", temp2));
             time2.setText(dateformat(dt2));
-            weather2.setImageResource(R.drawable.fullcloud);
+            weather2.setImageResource(R.drawable.cloudy);
             temptext3.setText(String.format("%.1f°C", temp3));
             time3.setText(dateformat(dt3));
-            weather3.setImageResource(R.drawable.raining);
+            weather3.setImageResource(R.drawable.fullcloud);
         } else {
             temptext1.setText("--");
             time1.setText("NaN");
