@@ -1,4 +1,5 @@
 package com.example.MyProject;
+
 import android.os.AsyncTask;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -11,12 +12,12 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class WeatherAsyncTask2 extends AsyncTask<String, Void, String> {
+public class Weatherforcast extends AsyncTask<String, Void, String> {
 
-    private WeatherCallback callback;
+    private final MainActivity1 mainActivity;
 
-    public WeatherAsyncTask2(WeatherCallback callback) {
-        this.callback = callback;
+    public Weatherforcast(MainActivity1 mainActivity) {
+        this.mainActivity = mainActivity;
     }
 
     @Override
@@ -65,15 +66,10 @@ public class WeatherAsyncTask2 extends AsyncTask<String, Void, String> {
                     date1[i] = date;
                     tempValues[i] = temp;
                 }
-                callback.onWeatherDataFetched2(tempValues[0], tempValues[1], tempValues[2],date1[0],date1[1],date1[2]);
+                mainActivity.onWeatherDataFetched2(tempValues[0], tempValues[1], tempValues[2], date1[0], date1[1], date1[2]);
             } catch (JSONException e) {
                 e.printStackTrace();
-
             }
         }
-    }
-
-    public interface WeatherCallback {
-        void onWeatherDataFetched2(double temp1, double temp2, double temp3 ,String dt1,String dt2 ,String dt3);
     }
 }

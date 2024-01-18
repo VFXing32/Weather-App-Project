@@ -58,8 +58,8 @@ public class MainActivity extends AppCompatActivity {
         String link = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + apikey + "&units=metric";
         String link2 = "https://api.openweathermap.org/data/2.5/forecast?q="+ city +"&appid=" + apikey + "&units=metric&cnt=4";
         class syncData1 extends AsyncTask<String, String, List<String[]>> {
-            String city = cityname.getText().toString();
-            String link2 = "https://api.openweathermap.org/data/2.5/forecast?q="+ city +"&appid=" + apikey + "&units=metric&cnt=4";
+            final String city = cityname.getText().toString();
+            final String link2 = "https://api.openweathermap.org/data/2.5/forecast?q="+ city +"&appid=" + apikey + "&units=metric&cnt=4";
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
@@ -137,8 +137,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         class syncData extends AsyncTask<String, String, String> {
-            String city = cityname.getText().toString();
-            String link = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + apikey + "&units=metric";
+            final String city = cityname.getText().toString();
+            final String link = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + apikey + "&units=metric";
 
             @Override
             protected void onPreExecute() {

@@ -1,7 +1,9 @@
 package com.example.MyProject;
+
 import android.os.AsyncTask;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,12 +11,12 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class WeatherAsyncTask extends AsyncTask<String, Void, String> {
+public class WeatherTask extends AsyncTask<String, Void, String> {
 
-    private WeatherCallback callback;
+    private final MainActivity1 mainActivity;
 
-    public WeatherAsyncTask(WeatherCallback callback) {
-        this.callback = callback;
+    public WeatherTask(MainActivity1 mainActivity) {
+        this.mainActivity = mainActivity;
     }
 
     @Override
@@ -60,18 +62,11 @@ public class WeatherAsyncTask extends AsyncTask<String, Void, String> {
             JSONObject weatherObject = jsonObject.getJSONArray("weather").getJSONObject(0);
             String description = weatherObject.getString("description");
 
-            // Pass the temperature and description to the callback
-            callback.onWeatherDataFetched(temperature, description);
+            mainActivity.onWeatherDataFetched(temperature, description);
 
         } catch (JSONException e) {
             e.printStackTrace();
-            callback.onWeathernoFetched("Wrong City");
+            mainActivity.onWeathernoFetched("Wrong City");
         }
     }
-
-    public interface WeatherCallback {
-        void onWeatherDataFetched(double temperature, String description);
-        void onWeathernoFetched(String text);
-    }
 }
-
