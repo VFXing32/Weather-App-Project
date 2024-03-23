@@ -1,8 +1,11 @@
 package com.example.MyProject;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -19,6 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+
 public class MainActivity1 extends AppCompatActivity {
     EditText cityname;
     TextView temptext;
@@ -34,6 +38,7 @@ public class MainActivity1 extends AppCompatActivity {
     TextView time1;
     TextView time2;
     TextView time3;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,28 +73,43 @@ public class MainActivity1 extends AppCompatActivity {
             // Night
             layout.setBackground(night);
         }
+
+        cityname.setOnEditorActionListener((v, actionId , event)->{
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    getlocation(apikey);
+                return false;
+            }
+            return true;
+        });
         reload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!cityname.getText().toString().isEmpty()) {
-                    String city = cityname.getText().toString();
-                    String apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + apikey + "&units=metric";
-                    String apiUrl2 = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=" + apikey + "&units=metric&cnt=4";
-                    WeatherTask weatherapi = new WeatherTask(MainActivity1.this);
-                    Weatherforcast weatherapi2 = new Weatherforcast(MainActivity1.this);
-                    weatherapi.execute(apiUrl);
-                    weatherapi2.execute(apiUrl2);
-                } else {
-                    temptext.setText("No city");
-                    desc.setText("NaN");
-                    temptext1.setText("--");
-                    temptext2.setText("--");
-                    temptext3.setText("--");
-                    weather.setImageResource(R.drawable.cloudysunnybg);
-                }
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(reload.getWindowToken(), InputMethodManager.RESULT_UNCHANGED_SHOWN);
+                getlocation(apikey);
             }
         });
     }
+
+    public void getlocation(String apikey){
+        if (!cityname.getText().toString().isEmpty()) {
+            String city = cityname.getText().toString();
+            String apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + apikey + "&units=metric";
+            String apiUrl2 = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=" + apikey + "&units=metric&cnt=4";
+            WeatherTask weatherapi = new WeatherTask(MainActivity1.this);
+            Weatherforcast weatherapi2 = new Weatherforcast(MainActivity1.this);
+            weatherapi.execute(apiUrl);
+            weatherapi2.execute(apiUrl2);
+        } else {
+            temptext.setText("No city");
+            desc.setText("NaN");
+            temptext1.setText("--");
+            temptext2.setText("--");
+            temptext3.setText("--");
+            weather.setImageResource(R.drawable.cloudysunnybg);
+        }
+    }
+
 
     public void onWeatherDataFetched(double temp, String description) {
         if (!Double.isNaN(temp)) {
