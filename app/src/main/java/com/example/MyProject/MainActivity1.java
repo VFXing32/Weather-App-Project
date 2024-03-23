@@ -9,51 +9,28 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.myapplication.R;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-
 import android.Manifest;
-import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
-import android.os.Bundle;
-import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
-import com.example.myapplication.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 
 
 public class MainActivity1 extends AppCompatActivity {
@@ -63,7 +40,8 @@ public class MainActivity1 extends AppCompatActivity {
     TextView temptext2;
     TextView temptext3;
     TextView desc;
-    Button reload;
+    ImageButton reload;
+    ImageButton getlocation;
     ImageView weather;
     ImageView weather1;
     ImageView weather2;
@@ -80,10 +58,8 @@ public class MainActivity1 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Check and request location permissions
         getLocationPermission();
 
-        // Other initializations
         Drawable morning = getDrawable(R.drawable.morning);
         Drawable evening = getDrawable(R.drawable.evening);
         Drawable night = getDrawable(R.drawable.night);
@@ -102,6 +78,7 @@ public class MainActivity1 extends AppCompatActivity {
         time1 = findViewById(R.id.time1);
         time2 = findViewById(R.id.time2);
         time3 = findViewById(R.id.time3);
+        getlocation = findViewById(R.id.getloc);
 
         if (timecheck() >= 7 && timecheck() < 13) {
             // Morning
@@ -129,6 +106,15 @@ public class MainActivity1 extends AppCompatActivity {
                 getlocation(apikey);
             }
         });
+        getlocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(reload.getWindowToken(), InputMethodManager.RESULT_UNCHANGED_SHOWN);
+                getLocationPermission();
+            }
+        });
+
     }
 
     private void getLocationPermission() {
@@ -178,8 +164,6 @@ public class MainActivity1 extends AppCompatActivity {
                             if (location != null) {
                                 double latitude = location.getLatitude();
                                 double longitude = location.getLongitude();
-                                // Do something with the latitude and longitude
-//                                Toast.makeText(MainActivity1.this, "Latitude: " + latitude + ", Longitude: " + longitude, Toast.LENGTH_SHORT).show();
                                 String address = LocationHelper.getCityFromLocation(MainActivity1.this, latitude, longitude);
                                 Toast.makeText(MainActivity1.this, "Address: " + address, Toast.LENGTH_SHORT).show();
                                 System.out.println(address);
@@ -187,7 +171,6 @@ public class MainActivity1 extends AppCompatActivity {
                                 gps(apikey,address);
                             }
                             else {
-                                // Location is null
                                 Toast.makeText(MainActivity1.this, "Unable to get location", Toast.LENGTH_SHORT).show();
                             }
                         }
