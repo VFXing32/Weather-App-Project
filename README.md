@@ -2,7 +2,7 @@
 Welcome to the WeatherApp for Android! This mobile application provides a visually appealing experience by incorporating an ImageView for weather type and dynamically changing background images based on the time of day. The app seamlessly integrates real-time weather information and today's forecast for any city, sourced from two free APIs provided by OpenWeather.
 
 ## Screenshots
-<img src="app/src/main/res/drawable/weathercorrect.png" alt="Weather Visualizer" width="320" height="560"> <img src="app/src/main/res/drawable/weatherwrong.png" alt="Weather Visualizer" width="320" height="560">
+<img src="app/src/main/res/drawable/weathercorrect.jpg" alt="Weather Visualizer" width="320" height="560"> <img src="app/src/main/res/drawable/weatherwrong.jpg" alt="Weather Visualizer" width="320" height="560"> <img src="app/src/main/res/drawable/weathernight.jpg" alt="Weather Visualizer" width="320" height="560">
 
 
 # Features
@@ -14,6 +14,9 @@ Access the weather forecast for today, including details such as temperature, ti
 Enjoy a visually immersive experience with background images that change based on the time of day.
 ### Weather Type Image: 
 Visualize the current weather type with an accompanying image.
+
+# GPS Location
+Added GPS location when you open the app it will automatically detect your location and show you the weather of that city
 
 # APIs Used
 This app relies on the following free APIs from the OpenWeather website: https://openweathermap.org/
